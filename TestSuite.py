@@ -6,7 +6,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 
-# This code is a test suite for a Google search page, it includes three test cases:
+# This code is a test suite for a Google search page, it includes four test cases:
 # Test1 - test_page_title: It navigates to the Google homepage and verifies that the title of
 # the page is "Google".
 #
@@ -18,6 +18,10 @@ from selenium.webdriver.common.by import By
 # Test-3 test_click_on_images_link: It navigates to the Google homepage,
 # clicks on the accept button, clicks on the Images link,
 # and verifies that the current URL is "https://www.google.se/imghp?hl=sv&ogbl"
+#
+# Test-4 test_search_for_images: Navigates to the Google Images homepage,
+# clicks the "Accept all" button, searches for "Selenium",
+# and then checks that there are more than 0 images displayed on the page.
 
 class GoogleTestCase(unittest.TestCase):
 
@@ -47,3 +51,13 @@ class GoogleTestCase(unittest.TestCase):
         images_link = self.browser.find_element(By.CSS_SELECTOR, "a.gb_m[data-pid='2']")
         images_link.click()
         self.assertEqual(self.browser.current_url, "https://www.google.se/imghp?hl=sv&ogbl")
+
+    def test_search_for_images(self):
+        self.browser.get("https://www.google.com/imghp")
+        acceptButton = self.browser.find_element(By.CSS_SELECTOR, "button#L2AGLb")
+        acceptButton.click()
+        search_field = self.browser.find_element(By.NAME, "q")
+        search_field.send_keys("Selenium", Keys.RETURN)
+        time.sleep(1)
+        images_list = self.browser.find_elements(By.CSS_SELECTOR, "img.rg_i")
+        self.assertTrue(len(images_list) > 0)
