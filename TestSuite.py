@@ -5,7 +5,6 @@ from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
-
 # This code is a test suite for a Google search page, it includes four test cases:
 # Test1 - test_page_title: It navigates to the Google homepage and verifies that the title of
 # the page is "Google".
@@ -15,13 +14,13 @@ from selenium.webdriver.common.by import By
 # verifies that the title of the page includes "Selenium",
 # and verifies that the Google logo is displayed.
 #
-# Test-3 test_click_on_images_link: It navigates to the Google homepage,
-# clicks on the accept button, clicks on the Images link,
-# and verifies that the current URL is "https://www.google.se/imghp?hl=sv&ogbl"
-#
-# Test-4 test_search_for_images: Navigates to the Google Images homepage,
-# clicks the "Accept all" button, searches for "Selenium",
+# Test-3 test_search_for_images: Navigates to the Google Images homepage,
+# clicks the accept button, searches for "Selenium",
 # and then checks that there are more than 0 images displayed on the page.
+
+# Test-4 test_click_on_sign_in_button: Navigates to the google homepage,
+# clicks on the accept button, clicks on the sign in link,
+# and then asserts that the current URL contains "accounts.google.com/v3/signin/identifier".
 
 class GoogleTestCase(unittest.TestCase):
 
@@ -44,14 +43,6 @@ class GoogleTestCase(unittest.TestCase):
         logo_element = self.browser.find_element(By.ID, "logo")
         self.assertTrue(logo_element.is_displayed())
 
-    def test_click_on_images_link(self):
-        self.browser.get("https://www.google.com")
-        acceptButton = self.browser.find_element(By.CSS_SELECTOR, "button#L2AGLb")
-        acceptButton.click()
-        images_link = self.browser.find_element(By.CSS_SELECTOR, "a.gb_m[data-pid='2']")
-        images_link.click()
-        self.assertEqual(self.browser.current_url, "https://www.google.se/imghp?hl=sv&ogbl")
-
     def test_search_for_images(self):
         self.browser.get("https://www.google.com/imghp")
         acceptButton = self.browser.find_element(By.CSS_SELECTOR, "button#L2AGLb")
@@ -61,3 +52,11 @@ class GoogleTestCase(unittest.TestCase):
         time.sleep(1)
         images_list = self.browser.find_elements(By.CSS_SELECTOR, "img.rg_i")
         self.assertTrue(len(images_list) > 0)
+
+    def test_click_on_sign_in_button(self):
+        self.browser.get("https://www.google.com")
+        acceptButton = self.browser.find_element(By.CSS_SELECTOR, "button#L2AGLb")
+        acceptButton.click()
+        sign_in_link = self.browser.find_element(By.CSS_SELECTOR, "a.gb_ha.gb_ia.gb_ee.gb_ed")
+        sign_in_link.click()
+        self.assertIn("accounts.google.com/v3/signin/identifier", self.browser.current_url)
